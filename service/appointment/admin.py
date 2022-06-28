@@ -9,3 +9,4 @@ admin.site.register(Specialist)
 admin.site.register(Appointment)
 admin.site.register(TimeSlots)
 admin.site.register(MyUser)
+

@@ -161,3 +161,4 @@ class DateAndTimeWorkApiView(views.APIView):
         specialist = Specialist.objects.get(pk=pk)
         dates = get_work_date(specialist)
         return Response(dates)
+

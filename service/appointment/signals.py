@@ -55,3 +55,4 @@ def create_specialist(user, request, **kwargs):
         )
         location = Location.objects.create(street=request.data["location"])
         Specialist.objects.create(user=user, service=service, location=location)
+

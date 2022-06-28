@@ -101,17 +101,6 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql_psycopg2",
-#         "NAME": "service",
-#         "USER": "admin",
-#         "PASSWORD": "admin",
-#         "HOST": "localhost",
-#         "PORT": "5432",
-#     }
-# }
-
 
 DATABASES = {
     'default': {
@@ -164,25 +153,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Celery
 
-# REDIS_HOST = "127.0.0.1"
-# REDIS_PORT = "6379"
-# CELERY_BROKER_URL = "redis://" + REDIS_HOST + ":" + REDIS_PORT + "/0"
-# # CELERY_BROKER_URL = "redis://redis:6379/0"
-# CELERY_BROKER_TRANSPORT_OPTIONS = {"visibility_timeout": 3600}
-# CELERY_RESULT_BACKEND = "redis://" + REDIS_HOST + ":" + REDIS_PORT + "/0"
-# # CELERY_RESULT_BACKEND = "redis://redis:6379/0"
-# CELERY_ACCEPT_CONTENT = ["application/json"]
-# CELERY_TASK_SERIALIZER = "json"
-# CELERY_RESULT_SERIALIZER = "json"
-
-
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = '6379'
-#CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 CELERY_BROKER_URL = "redis://redis:6379/0"
 CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_RESULT_BACKEND = "redis://redis:6379/0"
-#CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+

@@ -88,3 +88,4 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f"client: {self.client.username}, specialist: {self.specialist.user.username}"
+

@@ -12,3 +12,4 @@ def delete_appointment(client_id, specialist_id, date, time_slot_id, schedule_id
     appointment.delete()
     schedule = Schedule.objects.get(id=schedule_id)
     schedule.time_slots.add(time_slot_id)
+

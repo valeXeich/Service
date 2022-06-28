@@ -77,3 +77,4 @@ def create_time_slots(instance):
         instance.time_slots.get_or_create(start=last_time, end=next_time)
         if next_time.__str__() == end_schedule.__str__():
             break
+
