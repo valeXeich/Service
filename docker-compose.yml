@@ -1,0 +1,51 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: admin
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      bash -c "python manage.py makemigrations
+      && python manage.py migrate
+      && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./service:/user/app
+    ports:
+      - 8000:8000
+    environment:
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+  celery:
+    build: .
+    command: celery -A config worker -l info
+    volumes:
+      - ./service:/user/app
+    depends_on:
+      - web
+      - redis
+  redis:
+    image: redis
+  frontend:
+    build:
+      context: .
+      dockerfile: vue-frontend/Dockerfile
+    ports:
+      - 80:8080
+    depends_on:
+      - web
+
+
+volumes:
+  postgres_data:
