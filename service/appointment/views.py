@@ -1,10 +1,11 @@
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions, views
 from rest_framework.response import Response
 
 from .models import (Appointment, Location, MyUser, Schedule, Service,
                      Specialist, TimeSlots)
-from .permissions import IsClient, IsSpecialistOwnerOrAdmin
+from .permissions import IsClient, IsSpecialistOwnerOrAdmin, IsSpecialistOwner
 from .serializers import (AppointmentCreateSerializer, AppointmentSerializer,
                           LocationSerializer, ScheduleInfoSerializer,
                           ScheduleSerializer, ScheduleUpdateSerializer,
@@ -12,6 +13,7 @@ from .serializers import (AppointmentCreateSerializer, AppointmentSerializer,
                           SpecialistSerializer, UserSerializer)
 from .tasks import delete_appointment
 from .utils import get_difference_between_dates, get_work_date
+from .service import SpecialistFilter
 
 
 class SpecialistListApiView(generics.ListAPIView):
@@ -20,7 +22,7 @@ class SpecialistListApiView(generics.ListAPIView):
     queryset = Specialist.objects.all()
     serializer_class = SpecialistSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["service"]
+    filterset_class = SpecialistFilter
     permission_classes = [permissions.AllowAny]
 
 
@@ -30,7 +32,7 @@ class SpecialistScheduleListApiView(generics.ListAPIView):
     queryset = Schedule.objects.all()
     serializer_class = SpecialistScheduleSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["date"]
+    filterset_fields = ["day_of_week"]
 
 
 class SpecialistDetailScheduleListApiView(generics.ListAPIView):
@@ -40,7 +42,7 @@ class SpecialistDetailScheduleListApiView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        specialist = Specialist.objects.get(user__slug=self.kwargs["slug"])
+        specialist = get_object_or_404(Specialist, user__slug=self.kwargs["slug"])
         schedule = Schedule.objects.filter(specialist=specialist)
         return schedule
 
@@ -51,10 +53,10 @@ class SpecialistAppointmentListApiView(generics.ListAPIView):
     serializer_class = AppointmentSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["date"]
-    permission_classes = [IsSpecialistOwnerOrAdmin]
+    permission_classes = [IsSpecialistOwner]
 
     def get_queryset(self):
-        specialist = Specialist.objects.get(user__slug=self.kwargs["slug"])
+        specialist = get_object_or_404(Specialist, user__slug=self.kwargs["slug"])
         return Appointment.objects.filter(specialist=specialist)
 
 
@@ -86,14 +88,14 @@ class ScheduleUpdateApiView(generics.UpdateAPIView):
 
     queryset = Schedule.objects.all()
     serializer_class = ScheduleUpdateSerializer
-    permission_classes = [IsSpecialistOwnerOrAdmin]
+    permission_classes = [IsSpecialistOwner]
 
 
 class ScheduleDeleteApiView(generics.DestroyAPIView):
     """Delete schedule"""
 
     queryset = Schedule.objects.all()
-    permission_classes = [IsSpecialistOwnerOrAdmin]
+    permission_classes = [IsSpecialistOwner]
 
 
 class ServiceListApiView(generics.ListAPIView):

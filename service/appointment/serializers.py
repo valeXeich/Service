@@ -38,15 +38,17 @@ class ScheduleSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, data):
+        print(data)
         if data["end_schedule"] < data["start_schedule"]:
             raise serializers.ValidationError(
                 {"time": "end_schedule less than start_schedule"}
             )
         if "specialist" in data:
-            schedule = Schedule.objects.filter(
+            schedules = Schedule.objects.filter(
                 specialist=data["specialist"], day_of_week=data["day_of_week"]
-            ).first()
-            if schedule.end_schedule > data["start_schedule"]:
+            )
+            schedule = schedules.first()
+            if len(schedules) == 2 and schedule.end_schedule > data["start_schedule"]:
                 raise serializers.ValidationError(
                     {"time": "parent end_schedule bigger than children start_schedule"}
                 )
@@ -100,15 +102,15 @@ class SpecialistScheduleInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Specialist
-        exclude = ["user", "schedule"]
+        exclude = ["user"]
 
 
 class SpecialistScheduleSerializer(serializers.ModelSerializer):
-    specialists = SpecialistScheduleInfoSerializer(many=True)
+    specialist = SpecialistScheduleInfoSerializer()
 
     class Meta:
         model = Schedule
-        fields = ["date", "specialists"]
+        fields = ["day_of_week", "specialist", "start_schedule", "end_schedule"]
 
 
 class SpecialistInfoSerializer(serializers.ModelSerializer):
