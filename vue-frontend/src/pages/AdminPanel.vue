@@ -28,7 +28,7 @@
                 <tbody>
                 <tr v-for="specialist in specialists">
                   <td>
-                    <a href="#">{{ specialist.first_name }} {{ specialist.last_name }}</a>
+                    <a href="#">{{ specialist.user.first_name }} {{ specialist.user.last_name }}</a>
                   </td>
                   <td>
                     {{ specialist.location }}
@@ -181,6 +181,7 @@ export default {
   methods: {
     async fetchSpecialists() {
       const response = await axios.get('http://127.0.0.1:8000/api/specialist/list/');
+      console.log(response.data)
       this.specialists = response.data;
     },
     async getLocationList() {
@@ -277,9 +278,9 @@ export default {
         }
         const formData = {
           day_of_week: this.selected[specialist_id],
-          specialist: specialist_id,
           start_schedule: second_start,
           end_schedule: second_end,
+          specialist: specialist_id,
           is_second_schedule: is_second_schedule
         }
         try {
@@ -299,6 +300,7 @@ export default {
         const formData = {
           day_of_week: this.selected[specialist_id],
           start_schedule: first_start,
+          specialist: specialist_id,
           end_schedule: first_end,
           is_second_schedule: is_second_schedule
         }

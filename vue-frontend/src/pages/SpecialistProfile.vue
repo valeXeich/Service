@@ -166,7 +166,8 @@ export default {
       first_name: '',
       last_name: '',
       appoinments: [],
-      is_specialist: false
+      is_specialist: false,
+      specialist_id: ''
     }
   },
   methods: {
@@ -184,7 +185,8 @@ export default {
       const formData = {
         day_of_week: this.day_of_week,
         start_schedule: this.start_schedule,
-        end_schedule: this.end_schedule
+        end_schedule: this.end_schedule,
+        specialist: this.specialist_id
       }
       await axios.post('http://127.0.0.1:8000/api/specialist/schedule/create/', formData);
       this.created = true;
@@ -195,6 +197,7 @@ export default {
       const response = await axios.get(`http://127.0.0.1:8000/api/user/info/${this.$route.params.slug}/`);
       this.first_name = response.data.first_name;
       this.last_name = response.data.last_name;
+      this.specialist_id = response.data.id;
     },
     async userInfo() {
       try {
@@ -212,7 +215,8 @@ export default {
       const formData = {
         day_of_week: eng_day,
         start_schedule: this.second_start_schedule,
-        end_schedule: this.second_end_schedule
+        end_schedule: this.second_end_schedule,
+        specialist: this.specialist_id
       }
       await axios.post('http://127.0.0.1:8000/api/specialist/schedule/create/', formData);
       this.start_schedule = '';

@@ -9,7 +9,7 @@
               <div class="select-container">
                 <select v-model="selected" class="custom-select">
                   <option value="">Все</option>
-                  <option v-for="service in services" :value="service.id">{{ service.title }}</option>
+                  <option v-for="service in services" :value="service.title">{{ service.title }}</option>
                 </select>
               </div>
             </div>

@@ -5,7 +5,7 @@ class IsSpecialistOwnerOrAdmin(permissions.BasePermission):
     """Access for specialist and admin"""
 
     def has_permission(self, request, view):
-        if request.user.specialist_set.exists():
+        if request.user.is_authenticated is True and not request.user.specialist_set.exists():
             specialist = request.user.specialist_set.first()
         else:
             return False
@@ -20,13 +20,15 @@ class IsSpecialistOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.user.is_staff:
             return True
-        specialist = request.user.specialist_set.first()
-        return obj.specialist == specialist
+        if request.user.is_authenticated is True and not request.user.specialist_set.exists():
+            specialist = request.user.specialist_set.first()
+            return obj.specialist == specialist
+        return False
 
 
 class IsClient(permissions.BasePermission):
     """Access for client"""
 
     def has_permission(self, request, view):
-        return request.user.status == "client"
+        return request.user.is_authenticated is True and request.user.status == "client"
 
