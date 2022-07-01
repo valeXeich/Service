@@ -80,7 +80,7 @@ class UserInfoRetrieveApiView(generics.RetrieveAPIView):
     queryset = MyUser.objects.all()
     serializer_class = UserSerializer
     lookup_field = "slug"
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
 
 class ScheduleUpdateApiView(generics.UpdateAPIView):
